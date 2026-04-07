@@ -1,0 +1,45 @@
+name: bbmp-road-repair-env
+version: 1.0.0
+description: >
+  OpenEnv environment for training AI agents to prioritize
+  road repair complaints in Bengaluru like a BBMP municipal officer.
+  Agent manages budget, crews, and weather under real ward constraints.
+
+author: your-huggingface-username
+license: MIT
+
+tasks:
+  - id: task1
+    name: Single Ward Prioritization
+    difficulty: easy
+    max_steps: 10
+    description: 1 ward, 5 complaints, fixed budget. Learn basic prioritization.
+
+  - id: task2
+    name: Multi Ward Budget Management
+    difficulty: medium
+    max_steps: 20
+    description: 3 wards, 15 complaints, weather changes. Balance competing demands.
+
+  - id: task3
+    name: Full City Emergency Response
+    difficulty: hard
+    max_steps: 40
+    description: 5 wards, 30 complaints, rain creates new damage. Handle emergencies.
+
+observation_space:
+  - day
+  - budget_remaining
+  - crews_available
+  - weather
+  - complaints
+  - metrics
+
+action_space:
+  - repair
+  - inspect
+  - wait
+
+reward_range: [-100, 50]
+
+entry_point: server/app.py
