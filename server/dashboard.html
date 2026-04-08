@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -975,4 +976,983 @@ async function showDone() {
 window.onload = () => startNewEpisode();
 </script>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BBMP Road Repair Command Centre</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #030a0e;
+  --panel: #050f15;
+  --border: #0d3a4a;
+  --accent: #00c8ff;
+  --accent2: #ff6b1a;
+  --green: #00ff88;
+  --red: #ff2d55;
+  --yellow: #ffd60a;
+  --text: #c8e8f0;
+  --muted: #3a6070;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,200,255,0.015) 2px,rgba(0,200,255,0.015) 4px);
+  pointer-events:none;
+  z-index:999;
+}
+
+/* HEADER */
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #030a0e, #050f15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.logo-icon {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 0 20px rgba(0,200,255,0.3);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 20px rgba(0,200,255,0.3); }
+  50% { box-shadow: 0 0 35px rgba(0,200,255,0.6); }
+}
+.logo-text h1 {
+  font-family: 'Orbitron', monospace;
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+.logo-text p {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.status-live {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--green);
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: blink 1s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.clock {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: var(--accent);
+}
+
+/* TASK SELECTOR */
+.task-bar {
+  padding: 12px 32px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.task-bar span {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.task-btn {
+  padding: 6px 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 4px;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+.task-btn:hover { border-color: var(--accent); color: var(--accent); }
+.task-btn.active {
+  background: rgba(0,200,255,0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 12px rgba(0,200,255,0.2);
+}
+.reset-btn {
+  margin-left: auto;
+  padding: 8px 24px;
+  background: rgba(0,200,255,0.1);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 4px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.reset-btn:hover {
+  background: rgba(0,200,255,0.2);
+  box-shadow: 0 0 20px rgba(0,200,255,0.3);
+}
+
+/* METRICS ROW */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.metric-card {
+  background: var(--panel);
+  padding: 16px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.metric-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:2px;
+  background: var(--accent);
+  opacity: 0.4;
+}
+.metric-card.danger::before { background: var(--red); }
+.metric-card.warn::before { background: var(--yellow); }
+.metric-card.good::before { background: var(--green); }
+.metric-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.metric-value {
+  font-family: 'Orbitron', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.metric-card.danger .metric-value { color: var(--red); }
+.metric-card.warn .metric-value { color: var(--yellow); }
+.metric-card.good .metric-value { color: var(--green); }
+.metric-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* MAIN GRID */
+.main {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 0;
+  min-height: calc(100vh - 160px);
+}
+
+/* COMPLAINTS TABLE */
+.complaints-panel {
+  border-right: 1px solid var(--border);
+  padding: 24px;
+}
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.panel-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.complaint-count {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.table-wrap { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead th {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--muted);
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+tbody tr {
+  border-bottom: 1px solid rgba(13,58,74,0.5);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+tbody tr:hover { background: rgba(0,200,255,0.04); }
+tbody tr.selected { background: rgba(0,200,255,0.08); border-left: 3px solid var(--accent); }
+tbody td {
+  padding: 10px 12px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.sev-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.sev-critical { background: rgba(255,45,85,0.2); color: #ff2d55; border: 1px solid #ff2d55; }
+.sev-high { background: rgba(255,107,26,0.2); color: #ff6b1a; border: 1px solid #ff6b1a; }
+.sev-medium { background: rgba(255,214,10,0.2); color: #ffd60a; border: 1px solid #ffd60a; }
+.sev-low { background: rgba(0,255,136,0.2); color: #00ff88; border: 1px solid #00ff88; }
+
+.zone-icon { font-size: 14px; margin-right: 4px; }
+.impact-bar {
+  width: 60px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+.impact-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* RIGHT PANEL */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ACTION PANEL */
+.action-panel {
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+  flex: 1;
+}
+.selected-info {
+  background: rgba(0,200,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 20px;
+  min-height: 120px;
+}
+.selected-info.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+.selected-road {
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.selected-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+.detail-item { font-size: 12px; }
+.detail-label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.detail-value { color: var(--text); font-weight: 600; }
+
+/* FORM */
+.form-group { margin-bottom: 16px; }
+.form-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  display: block;
+}
+.form-select {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 12px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.form-select:focus { outline: none; border-color: var(--accent); }
+
+.execute-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, rgba(0,200,255,0.15), rgba(0,200,255,0.05));
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: 'Orbitron', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 4px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.execute-btn:hover {
+  background: linear-gradient(135deg, rgba(0,200,255,0.25), rgba(0,200,255,0.1));
+  box-shadow: 0 0 30px rgba(0,200,255,0.3);
+  transform: translateY(-1px);
+}
+.execute-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* REWARD FLASH */
+.reward-flash {
+  text-align: center;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 4px;
+  font-family: 'Orbitron', monospace;
+  font-size: 18px;
+  font-weight: 900;
+  display: none;
+  animation: flashIn 0.3s ease;
+}
+@keyframes flashIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.reward-flash.positive {
+  background: rgba(0,255,136,0.1);
+  border: 1px solid var(--green);
+  color: var(--green);
+}
+.reward-flash.negative {
+  background: rgba(255,45,85,0.1);
+  border: 1px solid var(--red);
+  color: var(--red);
+}
+
+/* LOG PANEL */
+.log-panel {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  background: #020810;
+  max-height: 200px;
+}
+.log-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+}
+.log-entries {
+  max-height: 150px;
+  overflow-y: auto;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+}
+.log-entry {
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(13,58,74,0.3);
+  animation: slideIn 0.2s ease;
+}
+@keyframes slideIn {
+  from { transform: translateX(-10px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.log-entry .time { color: var(--muted); margin-right: 8px; }
+.log-entry .msg-good { color: var(--green); }
+.log-entry .msg-bad { color: var(--red); }
+.log-entry .msg-info { color: var(--accent); }
+.log-entry .msg-warn { color: var(--yellow); }
+
+/* WEATHER BADGE */
+.weather-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+}
+.weather-sunny { border-color: var(--yellow); color: var(--yellow); background: rgba(255,214,10,0.1); }
+.weather-rain { border-color: var(--accent); color: var(--accent); background: rgba(0,200,255,0.1); }
+.weather-cloudy { border-color: var(--muted); color: var(--muted); }
+.weather-heavy_rain { border-color: var(--red); color: var(--red); background: rgba(255,45,85,0.1); }
+
+/* SCORE DISPLAY */
+.score-display {
+  padding: 16px 24px;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+}
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.score-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.score-value {
+  font-family: 'Orbitron', monospace;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--green);
+}
+.score-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.score-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* DONE OVERLAY */
+.done-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(3,10,14,0.92);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+}
+.done-overlay.show { display: flex; }
+.done-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--accent);
+  text-align: center;
+  animation: glow 1.5s infinite;
+}
+@keyframes glow {
+  0%,100% { text-shadow: 0 0 20px rgba(0,200,255,0.5); }
+  50% { text-shadow: 0 0 40px rgba(0,200,255,0.9), 0 0 80px rgba(0,200,255,0.4); }
+}
+.done-score {
+  font-family: 'Orbitron', monospace;
+  font-size: 64px;
+  font-weight: 900;
+  color: var(--green);
+}
+.done-restart {
+  padding: 14px 40px;
+  background: rgba(0,200,255,0.1);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  letter-spacing: 3px;
+  margin-top: 16px;
+}
+
+/* LOADING */
+.loading {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(3,10,14,0.8);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+}
+.loading.show { display: flex; }
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .main { grid-template-columns: 1fr; }
+  .metrics-row { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading" id="loading"><div class="spinner"></div></div>
+
+<!-- DONE OVERLAY -->
+<div class="done-overlay" id="doneOverlay">
+  <div class="done-title">⚡ EPISODE COMPLETE</div>
+  <div style="color:var(--muted);font-size:14px;letter-spacing:2px;">FINAL SCORE</div>
+  <div class="done-score" id="doneScore">0.00</div>
+  <div id="doneMsg" style="color:var(--text);font-size:16px;text-align:center;max-width:400px;"></div>
+  <button class="done-restart" onclick="startNewEpisode()">↺ NEW EPISODE</button>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">🏗️</div>
+    <div class="logo-text">
+      <h1>BBMP COMMAND CENTRE</h1>
+      <p>Road Repair Prioritization — AI Training Environment</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div id="weatherBadge" class="weather-badge weather-sunny">☀️ Sunny</div>
+    <div class="status-live"><div class="status-dot"></div>SYSTEM LIVE</div>
+    <div class="clock" id="clock">--:--:--</div>
+  </div>
+</div>
+
+<!-- TASK BAR -->
+<div class="task-bar">
+  <span>Mission:</span>
+  <button class="task-btn active" onclick="selectTask('task1', this)">Task 1 — Easy</button>
+  <button class="task-btn" onclick="selectTask('task2', this)">Task 2 — Medium</button>
+  <button class="task-btn" onclick="selectTask('task3', this)">Task 3 — Hard</button>
+  <button class="reset-btn" onclick="startNewEpisode()">⟳ RESET EPISODE</button>
+</div>
+
+<!-- METRICS -->
+<div class="metrics-row">
+  <div class="metric-card">
+    <div class="metric-label">Day</div>
+    <div class="metric-value" id="metDay">1</div>
+    <div class="metric-sub">of episode</div>
+  </div>
+  <div class="metric-card good">
+    <div class="metric-label">Budget Remaining</div>
+    <div class="metric-value" id="metBudget">₹0</div>
+    <div class="metric-sub" id="metBudgetPct">0% used</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Crews Available</div>
+    <div class="metric-value" id="metCrews">0</div>
+    <div class="metric-sub" id="metCrewsTotal">of 0 total</div>
+  </div>
+  <div class="metric-card warn">
+    <div class="metric-label">Complaints</div>
+    <div class="metric-value" id="metComplaints">0</div>
+    <div class="metric-sub" id="metResolved">0 resolved</div>
+  </div>
+  <div class="metric-card good">
+    <div class="metric-label">Episode Score</div>
+    <div class="metric-value" id="metScore">0.00</div>
+    <div class="metric-sub" id="metReward">reward: 0</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- COMPLAINTS TABLE -->
+  <div class="complaints-panel">
+    <div class="panel-header">
+      <div class="panel-title">⚠ Active Road Complaints</div>
+      <div class="complaint-count" id="complaintCount">Loading...</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Ward</th>
+            <th>Road</th>
+            <th>Zone</th>
+            <th>Severity</th>
+            <th>Days</th>
+            <th>Impact</th>
+            <th>Patch Cost</th>
+            <th>Full Cost</th>
+            <th>Population</th>
+          </tr>
+        </thead>
+        <tbody id="complaintsTable">
+          <tr><td colspan="10" style="text-align:center;color:var(--muted);padding:40px;">Loading complaints...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+
+    <!-- ACTION PANEL -->
+    <div class="action-panel">
+      <div class="panel-title" style="margin-bottom:16px;">⚡ Repair Action</div>
+
+      <div class="selected-info" id="selectedInfo">
+        <div class="empty">← Select a complaint to repair</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Repair Type</label>
+        <select class="form-select" id="repairType">
+          <option value="patch">Patch — Quick Fix (Lower Cost)</option>
+          <option value="full_repair">Full Repair — Permanent Fix</option>
+          <option value="emergency">Emergency — Urgent (1.5x Cost)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Contractor</label>
+        <select class="form-select" id="contractor">
+          <option value="CityRepair BBMP">CityRepair BBMP — Standard (Quality: 0.75)</option>
+          <option value="RoadPro Solutions">RoadPro Solutions — Premium (Quality: 0.92)</option>
+          <option value="QuickFix Pvt Ltd">QuickFix Pvt Ltd — Budget (Quality: 0.55)</option>
+          <option value="CheapBuild Co">CheapBuild Co — Cheapest (Quality: 0.30) ⚠</option>
+        </select>
+      </div>
+
+      <button class="execute-btn" id="executeBtn" onclick="executeRepair()" disabled>
+        ▶ EXECUTE REPAIR
+      </button>
+
+      <div class="reward-flash" id="rewardFlash"></div>
+
+      <!-- SCORE BAR -->
+      <div class="score-display" style="padding:16px 0 0;">
+        <div class="score-row">
+          <div class="score-label">Resolution Rate</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--accent)" id="resRate">0%</div>
+        </div>
+        <div class="score-bar-wrap">
+          <div class="score-bar-fill" id="resBar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOG -->
+    <div class="log-panel">
+      <div class="log-title">// ACTIVITY LOG</div>
+      <div class="log-entries" id="logEntries">
+        <div class="log-entry"><span class="time">00:00</span><span class="msg-info">System initialised. Select a task to begin.</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const BASE = window.location.origin;
+let currentTask = 'task1';
+let selectedComplaint = null;
+let totalReward = 0;
+let stepCount = 0;
+let episodeScore = 0;
+
+// Clock
+setInterval(() => {
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-IN');
+}, 1000);
+
+function log(msg, type='info') {
+  const el = document.getElementById('logEntries');
+  const time = new Date().toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const div = document.createElement('div');
+  div.className = 'log-entry';
+  div.innerHTML = `<span class="time">${time}</span><span class="msg-${type}">${msg}</span>`;
+  el.insertBefore(div, el.firstChild);
+  if (el.children.length > 20) el.removeChild(el.lastChild);
+}
+
+function showLoading(v) {
+  document.getElementById('loading').classList.toggle('show', v);
+}
+
+function selectTask(taskId, btn) {
+  currentTask = taskId;
+  document.querySelectorAll('.task-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  startNewEpisode();
+}
+
+async function startNewEpisode() {
+  showLoading(true);
+  document.getElementById('doneOverlay').classList.remove('show');
+  selectedComplaint = null;
+  totalReward = 0;
+  stepCount = 0;
+  document.getElementById('executeBtn').disabled = true;
+  document.getElementById('selectedInfo').innerHTML = '<div class="empty">← Select a complaint to repair</div>';
+  document.getElementById('rewardFlash').style.display = 'none';
+
+  try {
+    const r = await fetch(`${BASE}/reset?task_id=${currentTask}`, {method:'POST'});
+    const data = await r.json();
+    updateUI(data.observation);
+    log(`Episode started — ${data.task_description}`, 'info');
+    log(`Budget: ₹${data.observation.budget_remaining.toLocaleString('en-IN')} | Complaints: ${data.observation.complaints.length}`, 'info');
+  } catch(e) {
+    log('Error connecting to environment: ' + e.message, 'bad');
+  }
+  showLoading(false);
+}
+
+function updateUI(obs) {
+  // Metrics
+  document.getElementById('metDay').textContent = obs.day;
+  document.getElementById('metBudget').textContent = '₹' + Math.round(obs.budget_remaining).toLocaleString('en-IN');
+  document.getElementById('metBudgetPct').textContent = Math.round(obs.metrics.budget_used_pct * 100) + '% used';
+  document.getElementById('metCrews').textContent = obs.crews_available;
+  document.getElementById('metCrewsTotal').textContent = `of ${obs.crews_total} total`;
+  document.getElementById('metComplaints').textContent = obs.complaints.length;
+  document.getElementById('metResolved').textContent = obs.total_resolved + ' resolved';
+  document.getElementById('metScore').textContent = episodeScore.toFixed(4);
+  document.getElementById('metReward').textContent = 'reward: ' + totalReward.toFixed(1);
+
+  // Resolution bar
+  const rate = obs.metrics.resolution_rate || 0;
+  document.getElementById('resRate').textContent = Math.round(rate * 100) + '%';
+  document.getElementById('resBar').style.width = Math.round(rate * 100) + '%';
+
+  // Weather
+  const wb = document.getElementById('weatherBadge');
+  const weatherMap = {
+    sunny: {icon:'☀️', label:'Sunny', cls:'weather-sunny'},
+    cloudy: {icon:'☁️', label:'Cloudy', cls:'weather-cloudy'},
+    rain: {icon:'🌧️', label:'Rain', cls:'weather-rain'},
+    heavy_rain: {icon:'⛈️', label:'Heavy Rain', cls:'weather-heavy_rain'},
+  };
+  const w = weatherMap[obs.weather] || weatherMap.sunny;
+  wb.className = `weather-badge ${w.cls}`;
+  wb.innerHTML = `${w.icon} ${w.label}`;
+
+  // Table
+  const tbody = document.getElementById('complaintsTable');
+  if (!obs.complaints.length) {
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--green);padding:40px;">✓ ALL COMPLAINTS RESOLVED</td></tr>';
+    document.getElementById('complaintCount').textContent = 'All clear';
+    return;
+  }
+
+  // Sort by severity
+  const sevOrder = {critical:0, high:1, medium:2, low:3};
+  const sorted = [...obs.complaints].sort((a,b) => sevOrder[a.severity] - sevOrder[b.severity]);
+
+  const zoneIcon = {hospital:'🏥', school:'🏫', highway:'🛣️', commercial:'🏪', residential:'🏘️'};
+
+  tbody.innerHTML = sorted.map(c => `
+    <tr onclick="selectComplaint('${c.complaint_id}')" id="row-${c.complaint_id}" ${selectedComplaint===c.complaint_id?'class="selected"':''}>
+      <td style="font-family:'Share Tech Mono',monospace;color:var(--accent);font-size:12px;">${c.complaint_id}</td>
+      <td>${c.ward}</td>
+      <td style="color:var(--text);font-weight:600;">${c.road_name}</td>
+      <td><span class="zone-icon">${zoneIcon[c.zone_type]||'🏘️'}</span>${c.zone_type}</td>
+      <td><span class="sev-badge sev-${c.severity}">${c.severity}</span></td>
+      <td style="color:${c.days_pending>7?'var(--red)':'var(--text)'};">${c.days_pending}d</td>
+      <td>
+        ${(c.traffic_impact*100).toFixed(0)}%
+        <div class="impact-bar"><div class="impact-fill" style="width:${c.traffic_impact*100}%;background:${c.traffic_impact>0.7?'var(--red)':c.traffic_impact>0.4?'var(--yellow)':'var(--green)'}"></div></div>
+      </td>
+      <td style="color:var(--yellow);">₹${c.patch_cost.toLocaleString('en-IN')}</td>
+      <td style="color:var(--accent2);">₹${c.full_repair_cost.toLocaleString('en-IN')}</td>
+      <td style="color:var(--muted);">${c.population_affected.toLocaleString('en-IN')}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('complaintCount').textContent = `${obs.complaints.length} active — ${obs.total_resolved} resolved`;
+
+  // Re-highlight selected
+  if (selectedComplaint) {
+    const row = document.getElementById(`row-${selectedComplaint}`);
+    if (row) row.classList.add('selected');
+    else { selectedComplaint = null; document.getElementById('executeBtn').disabled = true; }
+  }
+}
+
+function selectComplaint(id) {
+  selectedComplaint = id;
+  document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('selected'));
+  const row = document.getElementById(`row-${id}`);
+  if (row) row.classList.add('selected');
+  document.getElementById('executeBtn').disabled = false;
+
+  // Find complaint data from table
+  const cells = row ? row.querySelectorAll('td') : [];
+  if (cells.length >= 9) {
+    document.getElementById('selectedInfo').innerHTML = `
+      <div class="selected-road">${cells[2].textContent}</div>
+      <div style="margin-bottom:8px;"><span class="sev-badge sev-${cells[4].querySelector('.sev-badge').className.split('sev-')[1]}">${cells[4].textContent.trim()}</span></div>
+      <div class="selected-details">
+        <div class="detail-item"><div class="detail-label">Ward</div><div class="detail-value">${cells[1].textContent}</div></div>
+        <div class="detail-item"><div class="detail-label">Zone</div><div class="detail-value">${cells[3].textContent.trim()}</div></div>
+        <div class="detail-item"><div class="detail-label">Days Pending</div><div class="detail-value" style="color:var(--red)">${cells[5].textContent}</div></div>
+        <div class="detail-item"><div class="detail-label">Traffic Impact</div><div class="detail-value">${cells[6].textContent.trim().split('%')[0]}%</div></div>
+        <div class="detail-item"><div class="detail-label">Patch Cost</div><div class="detail-value" style="color:var(--yellow)">${cells[7].textContent}</div></div>
+        <div class="detail-item"><div class="detail-label">Full Repair</div><div class="detail-value" style="color:var(--accent2)">${cells[8].textContent}</div></div>
+      </div>
+    `;
+  }
+  log(`Selected: ${id} — ${cells[2]?.textContent || ''}`, 'info');
+}
+
+async function executeRepair() {
+  if (!selectedComplaint) return;
+
+  const repairType = document.getElementById('repairType').value;
+  const contractor = document.getElementById('contractor').value;
+
+  document.getElementById('executeBtn').disabled = true;
+  showLoading(true);
+
+  try {
+    const r = await fetch(`${BASE}/step?task_id=${currentTask}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        action_type: 'repair',
+        complaint_id: selectedComplaint,
+        repair_type: repairType,
+        contractor: contractor,
+        reason: `Manual repair via dashboard`
+      })
+    });
+    const data = await r.json();
+    const reward = data.reward;
+    totalReward += reward;
+    stepCount++;
+
+    // Flash reward
+    const flash = document.getElementById('rewardFlash');
+    flash.style.display = 'block';
+    flash.className = `reward-flash ${reward >= 0 ? 'positive' : 'negative'}`;
+    flash.textContent = (reward >= 0 ? '+' : '') + reward.toFixed(2) + ' pts';
+    setTimeout(() => flash.style.display = 'none', 2000);
+
+    // Log
+    if (data.info?.result) {
+      log(data.info.result, reward > 0 ? 'good' : 'bad');
+    }
+    log(`Reward: ${reward >= 0 ? '+' : ''}${reward.toFixed(2)} | Budget left: ₹${data.observation.budget_remaining.toLocaleString('en-IN')}`, reward > 0 ? 'good' : 'warn');
+
+    if (data.info?.error) {
+      log('⚠ ' + data.info.error, 'bad');
+    }
+
+    selectedComplaint = null;
+    updateUI(data.observation);
+
+    // Check done
+    if (data.done) {
+      await showDone();
+    }
+
+  } catch(e) {
+    log('Error: ' + e.message, 'bad');
+  }
+
+  showLoading(false);
+}
+
+async function showDone() {
+  try {
+    const r = await fetch(`${BASE}/state?task_id=${currentTask}`);
+    const state = await r.json();
+    const score = state.metrics?.resolution_rate || 0;
+    episodeScore = score;
+    document.getElementById('doneScore').textContent = score.toFixed(4);
+    document.getElementById('metScore').textContent = score.toFixed(4);
+
+    let msg = '';
+    if (score > 0.8) msg = '🏆 Outstanding performance! All critical roads resolved.';
+    else if (score > 0.5) msg = '✅ Good work. Most high-priority roads were addressed.';
+    else msg = '⚠ Several critical roads remain unresolved. Try again!';
+    document.getElementById('doneMsg').textContent = msg;
+    log('Episode complete — Score: ' + score.toFixed(4), score > 0.5 ? 'good' : 'warn');
+  } catch(e) {}
+  setTimeout(() => document.getElementById('doneOverlay').classList.add('show'), 800);
+}
+
+// Start on load
+window.onload = () => startNewEpisode();
+</script>
+</body>
+>>>>>>> cc90a7623ce5e399e1092b311af4161a1155d0fc
 </html>
