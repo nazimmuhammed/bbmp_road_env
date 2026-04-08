@@ -1,16 +1,11 @@
-"""
-app.py - FastAPI web server for BBMP Road Repair Environment.
-Exposes reset(), step(), state() as HTTP endpoints.
-"""
-
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
-from models import BBMPAction, StepResult, ResetResult, StateResult
+from fastapi.responses import HTMLResponse
+from models import BBMPAction
 from environment import BBMPEnvironment
 
 app = FastAPI(
@@ -19,7 +14,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# One environment instance per task
 envs = {
     "task1": BBMPEnvironment("task1"),
     "task2": BBMPEnvironment("task2"),
@@ -59,6 +53,13 @@ def state(task_id: str = "task1"):
         raise HTTPException(status_code=400, detail=f"Unknown task: {task_id}")
     result = envs[task_id].state()
     return result.model_dump()
+
+@app.get("/dashboard", response_class=HTMLResponse)
+def dashboard():
+    html_path = os.path.join(os.path.dirname(__file__), "dashboard.html")
+    with open(html_path, "r") as f:
+        return f.read()
+
 def main():
     import uvicorn
     uvicorn.run("server.app:app", host="0.0.0.0", port=7860)

@@ -21,4 +21,4 @@ server = "server.app:main"
 [tool.openenv]
 name = "bbmp-road-repair-env"
 version = "1.0.0"
-entry_point = "server.app:app"
+entry_point = "server.app:main"
