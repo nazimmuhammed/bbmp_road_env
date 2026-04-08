@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "bbmp-road-repair-env"
+version = "1.0.0"
+description = "OpenEnv environment for BBMP road repair prioritization in Bengaluru"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "openenv-core",
+    "openai",
+]
+
+[project.scripts]
+server = "server.app:app"
+
+[tool.openenv]
+name = "bbmp-road-repair-env"
+version = "1.0.0"
+entry_point = "server/app.py"
