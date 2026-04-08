@@ -59,3 +59,9 @@ def state(task_id: str = "task1"):
         raise HTTPException(status_code=400, detail=f"Unknown task: {task_id}")
     result = envs[task_id].state()
     return result.model_dump()
+def main():
+    import uvicorn
+    uvicorn.run("server.app:app", host="0.0.0.0", port=7860)
+
+if __name__ == "__main__":
+    main()
